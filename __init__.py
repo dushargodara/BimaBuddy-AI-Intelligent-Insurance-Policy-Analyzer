@@ -1,1 +1,1 @@
-"""Backend services package."""
+"""Backend package for Insurance Policy Analyzer."""
