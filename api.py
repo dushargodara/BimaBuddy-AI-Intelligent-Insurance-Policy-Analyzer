@@ -34,7 +34,15 @@ if _env_file.exists():
 from flask import Flask, jsonify, request
 from werkzeug.utils import secure_filename
 
-from config import API_MAX_CONTENT_LENGTH, ALLOWED_EXTENSIONS, validate_config
+import os
+FLASK_HOST = "0.0.0.0"
+FLASK_PORT = int(os.getenv("PORT", 10000))
+FLASK_DEBUG = False
+ALLOWED_EXTENSIONS = {"pdf"}
+
+def validate_config():
+    return None
+
 from backend.services.pdf_service import get_processed_text
 from backend.services.ai_service import extract_policy_data, extract_structured_from_chunks
 from backend.services.regex_extractor import extract_financial_values, merge_with_ai
@@ -58,7 +66,7 @@ from backend.core.logger import get_logger
 logger = get_logger(__name__)
 
 app = Flask(__name__)
-app.config["MAX_CONTENT_LENGTH"] = API_MAX_CONTENT_LENGTH
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 
 
 # region agent log
@@ -686,13 +694,12 @@ def internal_error(e):
 
 
 if __name__ == "__main__":
-    from config import FLASK_HOST, FLASK_PORT, FLASK_DEBUG
-
     try:
         train_model()
         logger.info("ML Risk model trained successfully")
     except Exception as e:
         logger.warning("Failed to train ML model: %s", e)
 
-    logger.info("Starting Intelligent Insurance Policy Analyzer API on %s:%s", FLASK_HOST, FLASK_PORT)
-    app.run(host=FLASK_HOST, port=FLASK_PORT, debug=FLASK_DEBUG)
+    port = int(os.getenv("PORT", 10000))
+    logger.info("Starting Intelligent Insurance Policy Analyzer API on %s:%s", "0.0.0.0", port)
+    app.run(host="0.0.0.0", port=port)
