@@ -6,8 +6,9 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+import requests
 import streamlit as st
-from backend.pipeline import process_policy
+
 
 st.set_page_config(
     page_title="BimaBuddy AI — Insurance Policy Analyzer",
@@ -154,6 +155,36 @@ hr {
 
 </style>
 """, unsafe_allow_html=True)
+
+
+def call_analyze_api(uploaded_file) -> dict | None:
+    try:
+        files = {"file": (uploaded_file.name, uploaded_file.getvalue(), "application/pdf")}
+        resp  = requests.post(f"{API_BASE}/analyze", files=files, timeout=300)
+        resp.raise_for_status()
+        res = resp.json()
+        if res.get("status") == "success":
+            return res.get("data", {})
+        else:
+            st.error(res.get("message", "Analysis failed"))
+            return None
+    except requests.exceptions.ConnectionError:
+        st.error(f"Could not connect to backend at `{API_BASE}`. Ensure the Flask API is running.")
+        return None
+    except requests.exceptions.Timeout:
+        st.error("Request timed out. Try a smaller PDF or wait and retry.")
+        return None
+    except requests.exceptions.HTTPError as e:
+        try:
+            err_data = e.response.json() if e.response else {}
+            msg      = err_data.get("error", str(e))
+            st.error(f"**Analysis failed:** {msg}")
+        except Exception:
+            st.error(str(e))
+        return None
+    except Exception as e:
+        st.error(f"Unexpected error: {str(e)}")
+        return None
 
 def fmt_inr(value):
     if value is None:
@@ -362,25 +393,16 @@ def main() -> None:
             return
 
         with st.spinner("Analyzing your policy with Gemini AI… this may take 30–60 seconds."):
-            try:
-                result = process_policy(uploaded)
-                
-                if result is None:
-                    st.error("Analysis failed to return result.")
-                    return
+            result = call_analyze_api(uploaded)
 
-                if "error" in result:
-                    st.error(result["error"])
-                    return
+        if result is None:
+            return  
 
-                st.success("Analysis completed")
-                render_result(result)
-                
-            except Exception as e:
-                import traceback
-                st.error(f"Unexpected error: {str(e)}")
-                with st.expander("Error Details"):
-                    st.code(traceback.format_exc())
+        if "error" in result:
+            st.error(result["error"])
+            return
+
+        render_result(result)
 
 if __name__ == "__main__":
     main()
