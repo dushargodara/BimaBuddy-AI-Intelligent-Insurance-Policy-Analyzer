@@ -26,17 +26,23 @@ html, body, [class*="css"] {
 }
 
 .stApp {
-    background: #000000;
+    background: #000000 !important;
+    background-image: none !important;
 }
 
 [data-testid="stAppViewContainer"] {
-    background: #000000;
+    background: #000000 !important;
+    background-image: none !important;
+}
+
+header[data-testid="stHeader"] {
+    background: #000000 !important;
 }
 
 /* Header */
 .top-header {
-    background: #0a0a0a;
-    border-bottom: 2px solid #1a1a1a;
+    background: #000000;
+    border-bottom: 1px solid #1a1a1a;
     padding: 1.5rem 2rem;
     margin: -4rem -4rem 2rem -4rem;
     display: flex;
@@ -63,9 +69,18 @@ html, body, [class*="css"] {
     margin: 0;
 }
 
+/* File Uploader Correction */
+[data-testid="stFileUploader"] {
+    background-color: #000000 !important;
+}
+[data-testid="stFileUploadDropzone"] {
+    background-color: #000000 !important;
+    border-color: #1a1a1a !important;
+}
+
 /* Cards */
 .fin-card {
-    background: #0a0a0a;
+    background: #000000;
     border: 1px solid #1a1a1a;
     border-radius: 16px;
     padding: 1.5rem;
@@ -97,7 +112,7 @@ html, body, [class*="css"] {
 }
 /* Highlighted Card */
 .fin-card.highlight {
-    background: #111111;
+    background: #000000;
     border-color: #333333;
 }
 .fin-card.highlight .fin-card-title { color: #ffffff; }
@@ -227,7 +242,7 @@ def render_result(data: dict) -> None:
     summary = data.get("policy_summary", {})
     simple  = summary.get("simple_summary") if isinstance(summary, dict) else str(summary)
     if simple:
-        st.markdown(f"<div style='background:#0a0a0a; border:1px solid #1a1a1a; padding:1rem; border-radius:12px; color:#ffffff; margin-bottom:2rem;'><strong>Summary:</strong> {simple}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#000000; border:1px solid #1a1a1a; padding:1rem; border-radius:12px; color:#ffffff; margin-bottom:2rem;'><strong>Summary:</strong> {simple}</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='section-title'>Core Financials</div>", unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
@@ -310,7 +325,7 @@ def render_result(data: dict) -> None:
         
         st.markdown("<b>⚠️ Risk Analysis</b>", unsafe_allow_html=True)
         st.markdown(f"""
-        <div style="background:#0a0a0a; border:1px solid #1a1a1a; border-radius:12px; padding:1rem; margin-top:0.5rem;">
+        <div style="background:#000000; border:1px solid #1a1a1a; border-radius:12px; padding:1rem; margin-top:0.5rem;">
             <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
                 <span class="text-sm">Risk Score:</span>
                 <span class="badge {r_badge}">{risk_score}/10 ({risk_level})</span>
@@ -347,7 +362,7 @@ def render_result(data: dict) -> None:
 
     rec = data.get("recommendation", "")
     if rec:
-        st.markdown(f"<div style='margin-top:1.5rem; padding:1rem; border-left:4px solid #ffffff; background:#0a0a0a; color:#ffffff; border-radius:4px;'><b>Recommendation:</b> {rec}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='margin-top:1.5rem; padding:1rem; border-left:4px solid #ffffff; background:#000000; color:#ffffff; border-radius:4px;'><b>Recommendation:</b> {rec}</div>", unsafe_allow_html=True)
 
     warnings = data.get("warnings", [])
     if warnings:
