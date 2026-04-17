@@ -22,21 +22,21 @@ st.markdown("""
 
 html, body, [class*="css"] { 
     font-family: 'Inter', sans-serif; 
-    color: #0f172a;
+    color: #f1f5f9;
 }
 
 .stApp {
-    background: #f8fafc;
+    background: #000000;
 }
 
 [data-testid="stAppViewContainer"] {
-    background: #f8fafc;
+    background: #000000;
 }
 
 /* Header */
 .top-header {
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
+    background: #0a0a0a;
+    border-bottom: 2px solid #1a1a1a;
     padding: 1.5rem 2rem;
     margin: -4rem -4rem 2rem -4rem;
     display: flex;
@@ -45,42 +45,42 @@ html, body, [class*="css"] {
 }
 .header-icon {
     font-size: 2rem;
-    background: #eff6ff;
+    background: #1a1a1a;
     padding: 0.5rem;
     border-radius: 12px;
-    color: #2563eb;
+    color: #ffffff;
 }
 .header-titles h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #0f172a;
+    color: #f8fafc;
     margin: 0;
     padding: 0;
 }
 .header-titles p {
     font-size: 0.9rem;
-    color: #64748b;
+    color: #94a3b8;
     margin: 0;
 }
 
 /* Cards */
 .fin-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
     height: 100%;
-    transition: all 0.2s;
+    transition: transform 0.2s, border-color 0.2s;
 }
 .fin-card:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transform: translateY(-1px);
+    border-color: #333333;
+    transform: translateY(-2px);
 }
 .fin-card-title {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #64748b;
+    color: #94a3b8;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 0.5rem;
@@ -88,20 +88,20 @@ html, body, [class*="css"] {
 .fin-card-value {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #0f172a;
+    color: #f8fafc;
     margin-bottom: 0.25rem;
 }
 .fin-card-sub {
-    font-size: 0.85rem;
-    color: #94a3b8;
+    font-size: 0.8rem;
+    color: #64748b;
 }
 /* Highlighted Card */
 .fin-card.highlight {
-    background: #eff6ff;
-    border-color: #bfdbfe;
+    background: #111111;
+    border-color: #333333;
 }
-.fin-card.highlight .fin-card-title { color: #1e40af; }
-.fin-card.highlight .fin-card-value { color: #1e3a8a; }
+.fin-card.highlight .fin-card-title { color: #ffffff; }
+.fin-card.highlight .fin-card-value { color: #ffffff; }
 
 /* Status Badges */
 .badge {
@@ -111,60 +111,62 @@ html, body, [class*="css"] {
     font-size: 0.75rem;
     font-weight: 600;
 }
-.badge-good { background: #dcfce7; color: #166534; }
-.badge-warning { background: #fef9c3; color: #854d0e; }
-.badge-danger { background: #fee2e2; color: #991b1b; }
-.badge-neutral { background: #f1f5f9; color: #475569; }
+.badge-good { background: rgba(22, 101, 52, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+.badge-warning { background: rgba(133, 77, 14, 0.2); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.3); }
+.badge-danger { background: rgba(153, 27, 27, 0.2); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+.badge-neutral { background: rgba(71, 85, 105, 0.2); color: #cbd5e1; border: 1px solid rgba(203, 213, 225, 0.3); }
 
 hr {
-    border-color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.1);
     margin: 2rem 0;
 }
 
 .stButton>button {
-    background-color: #2563eb;
-    color: white;
-    border-radius: 8px;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
+    background: #ffffff;
+    color: #000000;
+    border-radius: 10px;
+    font-weight: 700;
+    padding: 0.6rem 1.2rem;
     border: none;
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
     transition: all 0.2s;
 }
 .stButton>button:hover {
-    background-color: #1d4ed8;
-    box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+    background: #cccccc;
+    transform: scale(1.02);
 }
 
 .section-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #0f172a;
-    margin-bottom: 1rem;
+    color: #f8fafc;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 /* Pills */
 .pill {
     display: inline-flex;
     align-items: center;
-    padding: 0.375rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
     margin: 0.25rem;
     font-weight: 500;
 }
-.pill-green { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-.pill-red { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-.pill-yellow { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.pill-green { background: #001a00; color: #4ade80; border: 1px solid #166534; }
+.pill-red { background: #1a0000; color: #f87171; border: 1px solid #991b1b; }
+.pill-yellow { background: #1a1a00; color: #fbbf24; border: 1px solid #92400e; }
 
 .text-sm { font-size: 0.875rem; }
 .text-muted { color: #64748b; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f8fafc; }
-::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
 
 </style>
 """, unsafe_allow_html=True)
@@ -225,7 +227,7 @@ def render_result(data: dict) -> None:
     summary = data.get("policy_summary", {})
     simple  = summary.get("simple_summary") if isinstance(summary, dict) else str(summary)
     if simple:
-        st.markdown(f"<div style='background:#f1f5f9; padding:1rem; border-radius:8px; color:#334155; margin-bottom:2rem;'><strong>Summary:</strong> {simple}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#0a0a0a; border:1px solid #1a1a1a; padding:1rem; border-radius:12px; color:#ffffff; margin-bottom:2rem;'><strong>Summary:</strong> {simple}</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='section-title'>Core Financials</div>", unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
@@ -308,14 +310,14 @@ def render_result(data: dict) -> None:
         
         st.markdown("<b>⚠️ Risk Analysis</b>", unsafe_allow_html=True)
         st.markdown(f"""
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:1rem; margin-top:0.5rem;">
+        <div style="background:#0a0a0a; border:1px solid #1a1a1a; border-radius:12px; padding:1rem; margin-top:0.5rem;">
             <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
                 <span class="text-sm">Risk Score:</span>
                 <span class="badge {r_badge}">{risk_score}/10 ({risk_level})</span>
             </div>
             <div style="display:flex; justify-content:space-between;">
                 <span class="text-sm">ML Prediction:</span>
-                <span class="text-sm" style="font-weight:600; color:#0f172a;">{str(ml_risk).title()}</span>
+                <span class="text-sm" style="font-weight:600; color:#ffffff;">{str(ml_risk).title()}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -345,7 +347,7 @@ def render_result(data: dict) -> None:
 
     rec = data.get("recommendation", "")
     if rec:
-        st.markdown(f"<div style='margin-top:1.5rem; padding:1rem; border-left:4px solid #2563eb; background:#eff6ff; color:#1e3a8a; border-radius:4px;'><b>Recommendation:</b> {rec}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='margin-top:1.5rem; padding:1rem; border-left:4px solid #ffffff; background:#0a0a0a; color:#ffffff; border-radius:4px;'><b>Recommendation:</b> {rec}</div>", unsafe_allow_html=True)
 
     warnings = data.get("warnings", [])
     if warnings:
