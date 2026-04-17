@@ -13,3 +13,17 @@ google-genai>=1.0.0
 
 # Frontend
 streamlit>=1.28.0
+
+flask
+gunicorn
+numpy
+numpy-financial
+scikit-learn
+google-genai
+pdfplumber
+pypdfium2
+pytesseract
+Pillow
+python-dotenv
+requests
+streamlit
