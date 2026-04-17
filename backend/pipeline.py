@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from services.pdf_service import get_processed_text
+from backend.services.pdf_service import get_processed_text
 from backend.services.ai_service import extract_policy_data, extract_structured_from_chunks
 from backend.services.model import predict_risk
 from backend.services.policy_classifier import detect_policy_type, is_term_insurance, is_insurance_policy
