@@ -9,9 +9,6 @@ if str(ROOT) not in sys.path:
 import requests
 import streamlit as st
 
-from config import FLASK_HOST, FLASK_PORT
-
-API_BASE = f"http://{FLASK_HOST}:{FLASK_PORT}"
 
 st.set_page_config(
     page_title="BimaBuddy AI — Insurance Policy Analyzer",
