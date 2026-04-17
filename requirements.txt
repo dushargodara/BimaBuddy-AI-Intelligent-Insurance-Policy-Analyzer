@@ -1,5 +1,4 @@
-# Insurance Policy Analyzer - Dependencies
-
+# Core
 python-dotenv>=1.0.0
 
 # PDF Processing
@@ -8,13 +7,14 @@ pypdfium2>=4.0.0
 pytesseract>=0.3.10
 Pillow>=10.0.0
 
-# AI (Google Gemini)
+# AI
 google-genai>=1.0.0
 
-# Machine Learning (IMPORTANT FIX)
-scikit-learn>=1.3.0
+# Data / Math (IMPORTANT FIXES)
 numpy>=1.24.0
-pandas>=2.0.0
+numpy-financial>=1.0.0
+scikit-learn>=1.3.0
 
 # Frontend
 streamlit>=1.28.0
+requests>=2.31.0
