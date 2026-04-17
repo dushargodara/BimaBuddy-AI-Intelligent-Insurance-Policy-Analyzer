@@ -57,7 +57,7 @@ def draw_card(title, value, subtext="", highlight=False, tooltip=""):
 def render_result(data: dict) -> None:
     st.success("✅ Analysis Completed")
 
-    st.write(data)  # (you can later replace with your full UI)
+    render_result_ui(data)  # (you can later replace with your full UI)
 
 
 # ---------------- MAIN ----------------
