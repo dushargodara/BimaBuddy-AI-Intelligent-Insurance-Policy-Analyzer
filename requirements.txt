@@ -8,8 +8,13 @@ pypdfium2>=4.0.0
 pytesseract>=0.3.10
 Pillow>=10.0.0
 
-# AI (Google Gemini) - use current SDK and models
+# AI (Google Gemini)
 google-genai>=1.0.0
+
+# Machine Learning (IMPORTANT FIX)
+scikit-learn>=1.3.0
+numpy>=1.24.0
+pandas>=2.0.0
 
 # Frontend
 streamlit>=1.28.0
