@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 
+# Add project root to path
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -9,134 +10,408 @@ import streamlit as st
 from backend.pipeline import process_policy
 
 st.set_page_config(
-    page_title="BimaBuddy AI",
+    page_title="BimaBuddy AI — Insurance Policy Analyzer",
     page_icon="🛡️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
-# ---------------- PREMIUM CSS ----------------
 st.markdown("""
 <style>
-body {
-    background-color: #f8fafc;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"] { 
+    font-family: 'Inter', sans-serif; 
+    color: #f1f5f9;
 }
 
-.main {
-    background: #f8fafc;
+.stApp {
+    background: #000000 !important;
+    background-image: none !important;
 }
 
-/* HERO */
-.hero {
-    text-align: center;
-    padding: 3rem 1rem;
+[data-testid="stAppViewContainer"] {
+    background: #000000 !important;
+    background-image: none !important;
 }
 
-.hero h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #0f172a;
+header[data-testid="stHeader"] {
+    background: #000000 !important;
 }
 
-.hero p {
-    color: #64748b;
-    font-size: 1.1rem;
+/* Header */
+.top-header {
+    background: #000000;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 1.5rem 2rem;
+    margin: -4rem -4rem 2rem -4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
-
-/* CARDS */
-.card {
-    background: white;
-    padding: 1.5rem;
+.header-icon {
+    font-size: 2rem;
+    background: #1a1a1a;
+    padding: 0.5rem;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    transition: 0.2s;
+    color: #ffffff;
 }
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+.header-titles h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0;
+    padding: 0;
 }
-
-/* FEATURE */
-.feature-title {
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.footer {
-    text-align: center;
-    padding: 2rem;
-    color: #64748b;
+.header-titles p {
     font-size: 0.9rem;
+    color: #94a3b8;
+    margin: 0;
 }
+
+/* File Uploader Correction */
+[data-testid="stFileUploader"] {
+    background-color: #000000 !important;
+}
+[data-testid="stFileUploadDropzone"] {
+    background-color: #000000 !important;
+    border-color: #1a1a1a !important;
+}
+
+/* Cards */
+.fin-card {
+    background: #000000;
+    border: 1px solid #1a1a1a;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
+    height: 100%;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.fin-card:hover {
+    border-color: #333333;
+    transform: translateY(-2px);
+}
+.fin-card-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+.fin-card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.25rem;
+}
+.fin-card-sub {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+/* Highlighted Card */
+.fin-card.highlight {
+    background: #000000;
+    border-color: #333333;
+}
+.fin-card.highlight .fin-card-title { color: #ffffff; }
+.fin-card.highlight .fin-card-value { color: #ffffff; }
+
+/* Status Badges */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.badge-good { background: rgba(22, 101, 52, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+.badge-warning { background: rgba(133, 77, 14, 0.2); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.3); }
+.badge-danger { background: rgba(153, 27, 27, 0.2); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+.badge-neutral { background: rgba(71, 85, 105, 0.2); color: #cbd5e1; border: 1px solid rgba(203, 213, 225, 0.3); }
+
+hr {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+}
+
+.stButton>button {
+    background: #ffffff;
+    color: #000000;
+    border-radius: 10px;
+    font-weight: 700;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    transition: all 0.2s;
+}
+.stButton>button:hover {
+    background: #cccccc;
+    transform: scale(1.02);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Pills */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin: 0.25rem;
+    font-weight: 500;
+}
+.pill-green { background: #001a00; color: #4ade80; border: 1px solid #166534; }
+.pill-red { background: #1a0000; color: #f87171; border: 1px solid #991b1b; }
+.pill-yellow { background: #1a1a00; color: #fbbf24; border: 1px solid #92400e; }
+
+.text-sm { font-size: 0.875rem; }
+.text-muted { color: #64748b; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- HERO ----------------
-st.markdown("""
-<div class="hero">
-    <h1>🛡️ BimaBuddy AI</h1>
-    <p>Understand your Insurance Policy Instantly</p>
-</div>
-""", unsafe_allow_html=True)
+def fmt_inr(value):
+    if value is None:
+        return "N/A"
+    try:
+        return f"₹{float(value):,.0f}"
+    except (TypeError, ValueError):
+        return "N/A"
 
-# ---------------- UPLOAD ----------------
-uploaded = st.file_uploader("Upload your policy PDF", type=["pdf"])
+def fmt_pct(value, decimals=2):
+    if value is None:
+        return "N/A"
+    try:
+        return f"{float(value):.{decimals}f}%"
+    except (TypeError, ValueError):
+        return "N/A"
 
-analyze_btn = st.button("🔍 Analyze Policy", use_container_width=True)
+def draw_card(title, value, subtext="", highlight=False, tooltip=""):
+    hl_class = " highlight" if highlight else ""
+    icon = ' <span style="font-size:0.8rem; cursor:help;">ⓘ</span>' if tooltip else ""
+    title_attr = f' title="{tooltip}"' if tooltip else ""
+    
+    st.markdown(f"""
+    <div class="fin-card{hl_class}"{title_attr} style="{ 'cursor:help;' if tooltip else '' }">
+        <div class="fin-card-title" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>{title}</span>
+            {icon}
+        </div>
+        <div class="fin-card-value">{value}</div>
+        <div class="fin-card-sub">{subtext}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-# ---------------- TRUST SECTION ----------------
-st.markdown("### Trusted by users")
-c1, c2, c3 = st.columns(3)
+def render_result(data: dict) -> None:
+    if data.get("degraded_analysis"):
+        st.warning("⚠️ Partial analysis: AI could not fully parse the document.")
 
-with c1:
-    st.markdown('<div class="card">10,000+ Policies Analyzed</div>', unsafe_allow_html=True)
-with c2:
-    st.markdown('<div class="card">AI Powered Insights</div>', unsafe_allow_html=True)
-with c3:
-    st.markdown('<div class="card">Secure & Private</div>', unsafe_allow_html=True)
+    policy_type = data.get("policy_type_detected", "N/A").upper()
+    gvng        = data.get("guaranteed_vs_non_guaranteed", "N/A")
+    roi_verdict = data.get("roi_verdict", "Unknown")
+    
+    badge_cls = "badge-neutral"
+    if "Good" in roi_verdict: badge_cls = "badge-good"
+    elif "Average" in roi_verdict: badge_cls = "badge-warning"
+    elif "Poor" in roi_verdict: badge_cls = "badge-danger"
 
-# ---------------- FEATURES ----------------
-st.markdown("### Why Choose Us")
-f1, f2, f3 = st.columns(3)
+    st.markdown(f"""
+    <div style="display:flex; gap:1rem; margin-bottom:1.5rem; align-items:center;">
+        <span class="badge badge-neutral">Policy Type: {policy_type}</span>
+        <span class="badge badge-neutral">Returns: {gvng}</span>
+        <span class="badge {badge_cls}">Verdict: {roi_verdict}</span>
+    </div>
+    """, unsafe_allow_html=True)
 
-with f1:
-    st.markdown('<div class="card"><div class="feature-title">📊 Smart Analysis</div><p>Understand returns, risk, and benefits instantly.</p></div>', unsafe_allow_html=True)
+    summary = data.get("policy_summary", {})
+    simple  = summary.get("simple_summary") if isinstance(summary, dict) else str(summary)
+    if simple:
+        st.markdown(f"<div style='background:#000000; border:1px solid #1a1a1a; padding:1rem; border-radius:12px; color:#ffffff; margin-bottom:2rem;'><strong>Summary:</strong> {simple}</div>", unsafe_allow_html=True)
 
-with f2:
-    st.markdown('<div class="card"><div class="feature-title">⚠️ Risk Detection</div><p>Find hidden clauses and risks in seconds.</p></div>', unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>Core Financials</div>", unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    total_investment = data.get("total_investment") or 0
+    maturity_value   = data.get("maturity_value")   or 0
+    net_profit       = data.get("net_profit")        or 0
+    roi              = data.get("roi") or data.get("roi_percent")
 
-with f3:
-    st.markdown('<div class="card"><div class="feature-title">📈 Comparison</div><p>Compare with FD & Mutual Funds easily.</p></div>', unsafe_allow_html=True)
+    delta_str = f"+{fmt_inr(net_profit)}" if net_profit >= 0 else f"-{fmt_inr(abs(net_profit))}"
 
-# ---------------- RESULT ----------------
-def render_result(data):
-    st.success("Analysis Completed")
+    with c1: draw_card("Total Investment", fmt_inr(total_investment), "Premiums over term", tooltip="Total money you pay to the insurance company over the years.")
+    with c2: draw_card("Maturity Value", fmt_inr(maturity_value), "Expected corpus", tooltip="The total money you get back at the end of the policy.")
+    with c3: draw_card("Net Profit", delta_str, "Maturity minus investment", tooltip="Your overall earnings (Money you get back minus money you paid).")
+    with c4: draw_card("Annualized ROI", fmt_pct(roi), "After-tax return", highlight=True, tooltip="Your yearly return after factoring in the income tax you saved.")
 
-    col1, col2, col3, col4 = st.columns(4)
+    st.markdown("<br><div class='section-title'>Rate Metrics & Premium</div>", unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    cagr = data.get("cagr") or data.get("cagr_percent")
+    irr  = data.get("irr")  or data.get("irr_percent")
+    be   = data.get("break_even_year")
+    
+    prem_details = data.get("premium_details", {})
+    prem_amt = fmt_inr(prem_details.get("amount"))
+    prem_freq = (prem_details.get("frequency") or "yearly").title()
+    
+    with c1: draw_card("CAGR", fmt_pct(cagr), "Pure growth rate", tooltip="Your yearly growth rate as if your money was growing in a standard bank savings account.")
+    with c2: draw_card("IRR", fmt_pct(irr), "Cashflow return rate", tooltip="Your true yearly return considering exactly when you make your payments each year.")
+    with c3: draw_card("Break-Even", f"{float(be):.1f} yrs" if be is not None else "N/A", "Value > Premiums", tooltip="The year when your policy's value finally becomes bigger than the total money you put in.")
+    with c4: draw_card("Premium", prem_amt, f"{prem_freq} payment", tooltip="Your regular payment amount.")
 
-    col1.metric("Investment", f"₹{data.get('total_investment',0):,.0f}")
-    col2.metric("Maturity", f"₹{data.get('maturity_value',0):,.0f}")
-    col3.metric("Profit", f"₹{data.get('net_profit',0):,.0f}")
-    col4.metric("ROI", f"{data.get('roi',0)}%")
+    st.markdown("---")
+    st.markdown("<div class='section-title'>Advanced Insights</div>", unsafe_allow_html=True)
+    
+    adv = data.get("advanced_metrics", {})
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        tax_ben = data.get("tax_benefit_80c") or adv.get("tax_saved_estimated") or 0
+        draw_card("80C Tax Benefit", fmt_inr(tax_ben), "Estimated tax saved", tooltip="The total income tax you save because of buying this policy.")
+    with c2:
+        infl_adj = data.get("inflation_adj_net_profit") or adv.get("inflation_adj_net_profit") or 0
+        draw_card("Inflation-Adj Profit", fmt_inr(infl_adj), "Today's purchasing power", tooltip="Your actual profit after removing the effect of rising prices (inflation).")
+    with c3:
+        adj_cagr = adv.get("inflation_adjusted_cagr")
+        draw_card("Real CAGR", fmt_pct(adj_cagr), "Stripping 6% inflation", tooltip="Your yearly growth rate considering that things get more expensive every year. (Negative means you lose buying power).")
 
-    st.markdown("### Recommendation")
-    st.info(data.get("recommendation","N/A"))
+    st.markdown("---")
+    st.markdown("<div class='section-title'>Qualitative Analysis</div>", unsafe_allow_html=True)
 
-# ---------------- LOGIC ----------------
-if analyze_btn:
-    if not uploaded:
-        st.warning("Upload a file first")
-    else:
-        with st.spinner("Analyzing..."):
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        st.markdown("<b>✅ Key Benefits</b>", unsafe_allow_html=True)
+        benefits = data.get("key_benefits", [])
+        if benefits:
+            pills = "".join(f"<div class='pill pill-green'>✓ {b}</div>" for b in benefits)
+            st.markdown(f"<div>{pills}</div><br>", unsafe_allow_html=True)
+        else:
+            st.markdown("<span class='text-muted'>No benefits extracted.</span><br><br>", unsafe_allow_html=True)
+
+        st.markdown("<b>🔍 Hidden Clauses</b>", unsafe_allow_html=True)
+        clauses = data.get("hidden_clauses", [])
+        if clauses:
+            pills = "".join(f"<div class='pill pill-yellow'>• {c}</div>" for c in clauses)
+            st.markdown(f"<div>{pills}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown("<span class='text-muted'>No hidden clauses identified.</span>", unsafe_allow_html=True)
+
+    with c2:
+        st.markdown("<b>❌ Exclusions</b>", unsafe_allow_html=True)
+        exclusions = data.get("exclusions", [])
+        if exclusions:
+            pills = "".join(f"<div class='pill pill-red'>✕ {e}</div>" for e in exclusions)
+            st.markdown(f"<div>{pills}</div><br>", unsafe_allow_html=True)
+        else:
+            st.markdown("<span class='text-muted'>No exclusions extracted.</span><br><br>", unsafe_allow_html=True)
+
+        risk_score = data.get("risk_score", 5)
+        risk_level = data.get("risk_level", "Medium")
+        ml_risk    = data.get("ml_risk_prediction", "N/A")
+        r_badge = "badge-good" if risk_score <= 3 else ("badge-warning" if risk_score <= 6 else "badge-danger")
+        
+        st.markdown("<b>⚠️ Risk Analysis</b>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style="background:#000000; border:1px solid #1a1a1a; border-radius:12px; padding:1rem; margin-top:0.5rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                <span class="text-sm">Risk Score:</span>
+                <span class="badge {r_badge}">{risk_score}/10 ({risk_level})</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span class="text-sm">ML Prediction:</span>
+                <span class="text-sm" style="font-weight:600; color:#ffffff;">{str(ml_risk).title()}</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    risky = data.get("risky_clauses", [])
+    if risky:
+        st.error("🚨 Risky Clauses Detected")
+        for r in risky:
+            st.markdown(f"- **{r.get('keyword', '')}:** {r.get('snippet', '')[:200]}…")
+
+    st.markdown("---")
+    st.markdown("<div class='section-title'>Investment Comparison</div>", unsafe_allow_html=True)
+    
+    comp = data.get("comparison", {})
+    policy_roi = data.get("roi") or data.get("roi_percent") or 0
+    fd_val = comp.get("fd_7pct_maturity") or 0
+    mf_val = comp.get("mf_sip_12pct_projection") or 0
+
+    c1, c2, c3 = st.columns(3)
+    roi_color = "#16a34a" if policy_roi >= 7 else "#dc2626"
+    with c1:
+        st.markdown(f"<div class='fin-card' style='border-top:4px solid {roi_color}'><b>Your Policy Returns</b><br><span style='font-size:1.5rem; font-weight:700; color:{roi_color}'>{fmt_pct(policy_roi)}</span></div>", unsafe_allow_html=True)
+    with c2:
+        st.markdown(f"<div class='fin-card' style='border-top:4px solid #64748b'><b>Fixed Deposit (7%)</b><br><span style='font-size:1.5rem; font-weight:700; color:#475569'>{fmt_inr(fd_val)}</span></div>", unsafe_allow_html=True)
+    with c3:
+        st.markdown(f"<div class='fin-card' style='border-top:4px solid #2563eb'><b>Mutual Fund (12%)</b><br><span style='font-size:1.5rem; font-weight:700; color:#2563eb'>{fmt_inr(mf_val)}</span></div>", unsafe_allow_html=True)
+
+    rec = data.get("recommendation", "")
+    if rec:
+        st.markdown(f"<div style='margin-top:1.5rem; padding:1rem; border-left:4px solid #ffffff; background:#000000; color:#ffffff; border-radius:4px;'><b>Recommendation:</b> {rec}</div>", unsafe_allow_html=True)
+
+    warnings = data.get("warnings", [])
+    if warnings:
+        with st.expander("ℹ️ Analysis Notes", expanded=False):
+            for w in warnings:
+                st.info(w)
+
+def main() -> None:
+    st.markdown("""
+    <div class="top-header">
+        <div class="header-icon">🛡️</div>
+        <div class="header-titles">
+            <h1>BimaBuddy AI</h1>
+            <p>Intelligent Insurance Policy Analyzer</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    uploaded = st.file_uploader(
+        "Upload your Insurance Policy PDF",
+        type=["pdf"],
+        help="Max 16 MB — text-selectable PDFs work best",
+    )
+
+    if st.button("🔍 Analyze Policy", use_container_width=True):
+        if not uploaded:
+            st.warning("Please upload a PDF file first.")
+            return
+
+        with st.spinner("Analyzing your policy with Gemini AI… this may take 30–60 seconds."):
             try:
                 result = process_policy(uploaded)
-                render_result(result)
-            except Exception as e:
-                st.error(str(e))
+                
+                if result is None:
+                    st.error("Analysis failed to return result.")
+                    return
 
-# ---------------- FOOTER ----------------
-st.markdown("""
-<div class="footer">
-    Made with ❤️ by BimaBuddy AI | Contact: support@bimabuddy.ai
-</div>
-""", unsafe_allow_html=True)
+                if "error" in result:
+                    st.error(result["error"])
+                    return
+
+                st.success("Analysis completed")
+                render_result(result)
+                
+            except Exception as e:
+                import traceback
+                st.error(f"Unexpected error: {str(e)}")
+                with st.expander("Error Details"):
+                    st.code(traceback.format_exc())
+
+if __name__ == "__main__":
+    main()
